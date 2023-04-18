@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Flight Search</title>
+    <!-- <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    /> -->
+    <!-- <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNS"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script> -->
+  </head>
+
+  <body>
+    <link href="../static/dashboardstyle.css" rel="stylesheet" />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <!-- {% if session.logged_in %} -->
+          <li class="nav-item">
+            <a class="nav-link" href="#"><b>Welcome, {{ session.email }}</b></a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('mybookings') }}"
+              ><b>My Bookings</b></a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}" color="white"
+              ><b>Logout</b></a
+            >
+          </li>
+          <!-- {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}"><b>Login</b></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('signup') }}">Sign Up</a>
+          </li>
+          {% endif %} -->
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1>Search Flights</h1>
+      <form id="search-flights-form" method="POST" action="/search_flights">
+        <div class="form-group">
+          <label for="departure">Departure:</label>
+          <select id="departure" name="departure" class="form-control">
+            <option value="">Select a starting location</option>
+            <option value="LAX">Los Angeles (LAX)</option>
+            <option value="SFO">San Francisco (SFO)</option>
+            <option value="ORD">Chicago (ORD)</option>
+            <option value="JFK">New York (JFK)</option>
+            <option value="LGA">New York (LGA)</option>
+            <option value="DCA">Washington D.C. (DCA)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="arrival">Arrival:</label>
+          <select id="arrival" name="arrival" class="form-control">
+            <option value="">Select a destination</option>
+            <option value="LAX">Los Angeles (LAX)</option>
+            <option value="SFO">San Francisco (SFO)</option>
+            <option value="ORD">Chicago (ORD)</option>
+            <option value="JFK">New York (JFK)</option>
+            <option value="LGA">New York (LGA)</option>
+            <option value="DCA">Washington D.C. (DCA)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="departure_date">Departure Date:</label>
+          <input
+            type="date"
+            id="departure_date"
+            name="departure_date"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="departure_time">Departure Time:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="departure_time"
+            name="departure_time"
+          />
+        </div>
+        <div class="form-group">
+          <label for="arrival_date">Arrival Date:</label>
+          <input
+            type="date"
+            class="form-control"
+            id="arrival_date"
+            name="arrival_date"
+          />
+        </div>
+        <div class="form-group">
+          <label for="arrival_time">Arrival Time:</label>
+          <input
+            type="time"
+            class="form-control"
+            id="arrival_time"
+            name="arrival_time"
+          />
+        </div>
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+
+      <form method="POST" action="/bookings">
+        <div>
+          <label for="flight-number">Flight Number:</label>
+          <input type="text" id="flight-number" name="flight_number" />
+          <input type="hidden" name="email" value="{{ session.email }}" />
+          <button type="submit">Book</button>
+        </div>
+      </form>
+      <div class="flight-search-results">
+        <h2>Search Results:</h2>
+        {% if flight_data %}
+        <table>
+          <thead>
+            <tr>
+              <th>Flight Number</th>
+              <th>Departure</th>
+              <th>Arrival</th>
+              <th>Departure Date</th>
+              <th>Departure Time</th>
+              <th>Arrival Date</th>
+              <th>Arrival Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for flight in flight_data %}
+            <tr>
+              <td>{{ flight.flight_number }}</td>
+              <td>{{ flight.departure }}</td>
+              <td>{{ flight.arrival }}</td>
+              <td>{{ flight.departure_date }}</td>
+              <td>{{ flight.departure_time }}</td>
+              <td>{{ flight.arrival_date }}</td>
+              <td>{{ flight.arrival_time }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No flights found for your search criteria.</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

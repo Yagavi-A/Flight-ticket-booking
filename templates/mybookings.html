@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Flight Booking App</title>
+    <!-- Bootstrap CSS -->
+    <!-- <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    /> -->
+  </head>
+  <style>
+    /* Navigation bar */
+    .navbar {
+      background-color: #0d0d87;
+      padding: 15px; /* Set background color to blue */
+    }
+    .navbar-dark .navbar-brand {
+      color: #fff; /* Set text color to white */
+    }
+
+    /* Search/Book and Logout links */
+    .navbar-nav {
+      display: flex; /* Display links as flex items */
+      align-items: center; /* Vertically align flex items */
+    }
+    .nav-link {
+      color: #fff; /* Set text color to white */
+      padding: 0.5rem 1rem;
+      font-size: 120%; /* Add padding to nav links */
+    }
+    .nav-item:first-child {
+      margin-right: auto; /* Push Flight Booking App to the left */
+    }
+    .nav-item:last-child {
+      margin-left: 20px; /* Add margin to the left of Logout */
+    }
+
+    /* Bookings table */
+    .booking {
+      margin-bottom: 20px; /* Add margin between booking entries */
+    }
+    .booking p {
+      margin: 0; /* Remove default margin from paragraphs */
+    }
+
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif; /* Set font family for the whole page */
+    }
+    .container {
+      max-width: 800px; /* Limit the width of the content */
+      margin: 20px auto; /* Center the content */
+    }
+    h1 {
+      margin-top: 0; /* Remove default margin from heading */
+    }
+  </style>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Flight Booking App</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('dashboard') }}"
+              >Search/Book</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h1>My Bookings</h1>
+      {% if bookings %}
+      <table>
+        <tr>
+          {% for booking in bookings %}
+          <div class="booking">
+            <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+            <p><strong>Flight Number:</strong> {{ booking.flight_number }}</p>
+            <p><strong>Departure:</strong> {{ booking.departure }}</p>
+            <p><strong>Arrival:</strong> {{ booking.arrival }}</p>
+            <p><strong>Departure Date:</strong> {{ booking.departure_date }}</p>
+            <p><strong>Departure Time:</strong> {{ booking.departure_time }}</p>
+            <p><strong>Arrival Date:</strong> {{ booking.arrival_date }}</p>
+            <p><strong>Arrival Time:</strong> {{ booking.arrival_time }}</p>
+            <hr />
+          </div>
+          {% endfor %}
+        </tr>
+      </table>
+      {% else %}
+      <p>You have no bookings yet.</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

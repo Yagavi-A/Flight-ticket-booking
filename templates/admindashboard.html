@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Flight Routes</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <style>
+      table {
+        margin-top: 20px;
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Flight Search</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Welcome, {{ session.username }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('adminlogout') }}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <h1 class="text-center">Flight Routes</h1>
+      <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+          <h3 class="mt-3">Create New Flight Route</h3>
+          <form method="POST" action="/flights">
+            <div class="form-group">
+              <label for="flight-number">Flight Number:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="flight-number"
+                name="flight_number"
+                placeholder="Enter flight number"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="departure">Departure:</label>
+              <select
+                id="departure"
+                name="departure"
+                class="form-control"
+                required
+              >
+                <option value="">Select a starting location</option>
+                <option value="LAX">Los Angeles (LAX)</option>
+                <option value="SFO">San Francisco (SFO)</option>
+                <option value="ORD">Chicago (ORD)</option>
+                <option value="JFK">New York (JFK)</option>
+                <option value="LGA">New York (LGA)</option>
+                <option value="DCA">Washington D.C. (DCA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="arrival">Arrival:</label>
+              <select id="arrival" name="arrival" class="form-control" required>
+                <option value="">Select a destination</option>
+                <option value="LAX">Los Angeles (LAX)</option>
+                <option value="SFO">San Francisco (SFO)</option>
+                <option value="ORD">Chicago (ORD)</option>
+                <option value="JFK">New York (JFK)</option>
+                <option value="LGA">New York (LGA)</option>
+                <option value="DCA">Washington D.C. (DCA)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="departure_date">Departure Date:</label>
+              <input
+                type="date"
+                class="form-control"
+                id="departure_date"
+                name="departure_date"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="departure_time">Departure Time:</label>
+              <input
+                type="time"
+                class="form-control"
+                id="departure_time"
+                name="departure_time"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="arrival_date">Arrival Date:</label>
+              <input
+                type="date"
+                class="form-control"
+                id="arrival_date"
+                name="arrival_date"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="arrival_time">Arrival Time:</label>
+              <input
+                type="time"
+                class="form-control"
+                id="arrival_time"
+                name="arrival_time"
+                required
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Create Flight Route
+            </button>
+          </form>
+          <div>
+            <form method="post" action="/delflights">
+              <div class="form-group">
+                <label for="flight-delete"
+                  >Enter Flight Number to Delete:</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="flight-delete"
+                  name="flight_number"
+                  placeholder="Flight Number"
+                />
+              </div>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <h3 class="mt-5">Existing Flight Routes</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Flight Number</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Departure Date</th>
+                <th>Departure Time</th>
+                <th>Arrival Date</th>
+                <th>Arrival Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for flight in flights %}
+              <tr>
+                <td>{{ flight.flight_number }}</td>
+                <td>{{ flight.departure }}</td>
+                <td>{{ flight.arrival }}</td>
+                <td>{{ flight.departure_date }}</td>
+                <td>{{ flight.departure_time }}</td>
+                <td>{{ flight.arrival_date }}</td>
+                <td>{{ flight.arrival_time }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 offset-lg-2">
+          <h3 class="mt-5">Users Booked Routes</h3>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Flight Number</th>
+              <th>Departure</th>
+              <th>Arrival</th>
+              <th>Departure Date</th>
+              <th>Departure Time</th>
+              <th>Arrival Date</th>
+              <th>Arrival Time</th>
+            </tr>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking.name }}</td>
+              <td>{{ booking.email }}</td>
+              <td>{{ booking.flight_number }}</td>
+              <td>{{ booking.departure }}</td>
+              <td>{{ booking.arrival }}</td>
+              <td>{{ booking.departure_date }}</td>
+              <td>{{ booking.departure_time }}</td>
+              <td>{{ booking.arrival_date }}</td>
+              <td>{{ booking.arrival_time }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
